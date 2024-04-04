@@ -1,10 +1,11 @@
-# emo-gen data source
+# emo-gen default data source
 #
 # names are stored in least-obfuscated form
 # (lowercase, no numbers, no shortened words, no external separators)
 # pipes ("|") indicate word seperator point
+# other plaintext files in this folder will be read
 #
-# updated 04-03-2024
+# updated 04-04-2024
 
 # [1]
 it|wasnt|a|phase|mom
