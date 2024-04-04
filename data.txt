@@ -1,7 +1,7 @@
 # emo-gen data source
 #
 # names are stored in least-obfuscated form
-# (lowercase, no numbers, no shortened words, no external seperators)
+# (lowercase, no numbers, no shortened words, no external separators)
 # pipes ("|") indicate word seperator point
 #
 # updated 04-03-2024
