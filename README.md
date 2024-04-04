@@ -1,4 +1,4 @@
-# emo-gen
+# emogen
 A python command-line utility to generate a random emo username.
 
 ## References
