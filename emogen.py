@@ -27,19 +27,19 @@ class EmoGen:
     }
 
     def __init__(self, data_source: Path):
-        self.data = None
+        self.data: list[list[str]] = None
         self.set_data_source(data_source)
 
     def __str__(self) -> str:
         result: list[str] = list()
 
-        for name in self.data.keys():
-            result.append(name)
+        for name in self.data:
+            result.append(''.join(name))
 
         return str(result)
 
     def set_data_source(self, data_source: Path) -> bool:
-        self.data: dict[str, list[str]] = dict()
+        self.data: list[list[str]] = list()
 
         for child in data_source.iterdir():
             if guess_type(child)[0] == 'text/plain':
@@ -51,7 +51,7 @@ class EmoGen:
                         seperated_line: list[str] = line.split('|')
                         seperated_line[-1] = seperated_line[-1].strip(' \t\n\r')
 
-                        self.data.update({''.join(seperated_line): seperated_line})
+                        self.data = seperated_line
 
         if len(self.data) == 0:
             self.data = None
@@ -61,11 +61,14 @@ class EmoGen:
     def generate(self) -> str:
         result: str = str()
 
-        prefix = None
+        prefix: str = None
         if randrange(2):
             prefix = randrange(len(self.PREFIX_SUFFIX))
             str += self.PREFIX_SUFFIX[prefix][0]
 
 
+
+
 if __name__ == '__main__':
     emo_gen: EmoGen = EmoGen(Path('sources'))
+    print(emo_gen)
