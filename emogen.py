@@ -11,23 +11,25 @@ class EmoGen:
     PREFIX_SUFFIX: Final[tuple[tuple[str]]] = (
         ('', '_'),
         ('_', '_'),
-        ('_xx', 'xx_'),
-        ('_xX', 'Xx_'),
-        ('xx', 'xx'),
-        ('xX', 'Xx')
+        (
+            ('_xx', 'xx_'),
+            ('_xX', 'Xx_'),
+            ('xx', 'xx'),
+            ('xX', 'Xx')
+        )
     )
     SEPARATORS: Final[tuple[str]] = ('_', 'CAP')
     LETTER_NUMBER: Final[dict[str, str]] = {
         "A": "4",
-        "B": "8",
+        # "B": "8",
         "E": "3",
-        "G": "9",
+        # "G": "9",
         "O": "0",
         "S": "5"
     }
 
     def __init__(self, data_source: Path):
-        self.data: list[list[str]] = None
+        self.data: list[list[str]] = list()
         self.set_data_source(data_source)
 
     def __str__(self) -> str:
@@ -49,7 +51,7 @@ class EmoGen:
                             continue
 
                         seperated_line: list[str] = line.split('|')
-                        seperated_line[-1] = seperated_line[-1].strip(' \t\n\r')
+                        seperated_line[-1] = seperated_line[-1].strip(' \n\r')
 
                         self.data.append(seperated_line)
 
@@ -58,25 +60,43 @@ class EmoGen:
 
         return self.data is not None
 
-    def generate(self, prefix_chance: int=2, l33t_chance: int=2) -> str:
+    def generate(self, prefix_chance: int = 3, l33t_chance: int = 3, seperator_chance: int = 2) -> str:
         result: str = ''
-        
-        end_caps: str = None
-        if prefix_chance <= 0 or randrange(prefix_chance): # (default) 50% chance of prefix & suffix
+
+        end_caps: tuple = ('', '')
+        if prefix_chance <= 0 or randrange(prefix_chance):  # (default) 50% chance of prefix & suffix
             end_caps = choice(self.PREFIX_SUFFIX)
+            if type(end_caps[0]) is tuple:
+                end_caps = choice(end_caps)
+
             result += end_caps[0]
 
         user: list[str] = choice(self.data)
 
-        if l33t_chance <= 0 or randrange(l33t_chance): # (default) 50% chance of l33t
-            for i in range(len(user)):
-                for j in range(len(user[i]))[1:]:
-                    if user[i][j] in self.LETTER_NUMBER.keys() and (l33t_chance <= 0 or randrange(l33t_chance)):
-                        user[i][j] = self.LETTER_NUMBER[user[i][j].upper()]
-                        print(user[i])
+        for i in range(len(user)):
+            if l33t_chance <= 0 or randrange(l33t_chance):  # (default) 50% chance of l33t
+                for j in list(range(len(user[i])))[1:]:
+                    if (user[i][j].upper() in self.LETTER_NUMBER.keys()
+                            and (l33t_chance <= 0 or randrange(l33t_chance*12))):
+                        user[i] = user[i][:j] + self.LETTER_NUMBER[user[i][j].upper()] + user[i][j+1:]
                         break
+
+        if seperator_chance <= 0 or randrange(seperator_chance):  # (default) 50% chance of having seperator
+            seperator = choice(self.SEPARATORS)
+            match seperator:
+                case "CAP":
+                    for i in range(len(user)):
+                        user[i] = user[i][0].upper() + user[i][1:]
+
+                    result = ''.join(user)
+                case _:
+                    result = seperator.join(user)
+        else:
+            result = ''.join(user)
+
+        return end_caps[0] + result + end_caps[1]
 
 
 if __name__ == '__main__':
     emo_gen: EmoGen = EmoGen(Path('sources'))
-    emo_gen.generate()
+    print(emo_gen.generate())
