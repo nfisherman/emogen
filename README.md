@@ -1,29 +1,12 @@
+*Note: This is a version of emogen that was made in Lua to test out the language.*
+
 # emogen
-A python command-line utility to generate a random emo username.
+
+A Lua command-line utility to generate a random emo username.
 
 ## Dependencies
 
-Python > 3.10
-
-## Usage
-
-```
->>> import emogen, pathlib
->>> gen = emogen.EmoGen(pathlib.Path('sources'))
->>> for i in range(5):
-...     print(gen.generate(i, i, i))
-... 
-_th3_ang3l_fr0m_y0ur_nightm4re_
-concreteemo
-_myownworsten3my_
-W0undedW4rriorPrinc3ss
-xXstille4tinglunchal0neXx
-```
-
-Alternatively, run the script from your terminal emulator to generate a name:
-```
-python3 -m emogen
-```
+Lua > 5.4
 
 ## References
 
