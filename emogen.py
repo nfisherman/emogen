@@ -1,11 +1,13 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
-import argparse
+import argparse, os, sys
 from mimetypes import guess_type
 from pathlib import Path
 from typing import Final
 from random import randrange, choice
 
+NAME: Final[str] = 'emogen'
+VERSION: Final[tuple[int]] = (0, 1, 0)
 
 class EmoGen:
     PREFIX_SUFFIX: Final[tuple[tuple[str]]] = (
@@ -19,7 +21,7 @@ class EmoGen:
         )
     )
     SEPARATORS: Final[tuple[str]] = ('_', 'CAP')
-    LETTER_NUMBER: Final[dict[str, str]] = {
+    L33T: Final[dict[str, str]] = {
         "A": "4",
         # "B": "8",
         "E": "3",
@@ -28,9 +30,12 @@ class EmoGen:
         "S": "5"
     }
 
-    def __init__(self, data_source: Path):
+    def __init__(self, data_source: Path, prefix_chance: int = 3, l33t_chance: int = 3, seperator_chance: int = 2):
         self.data: list[list[str]] = list()
         self.set_data_source(data_source)
+        self.prefix_chance = prefix_chance
+        self.l33t_chance = l33t_chance
+        self.seperator_chance = seperator_chance
 
     def __str__(self) -> str:
         result: list[str] = list()
@@ -60,11 +65,11 @@ class EmoGen:
 
         return self.data is not None
 
-    def generate(self, prefix_chance: int = 3, l33t_chance: int = 3, seperator_chance: int = 2) -> str:
+    def generate(self) -> str:
         result: str = ''
 
         end_caps: tuple = ('', '')
-        if prefix_chance <= 0 or randrange(prefix_chance):  # (default) 50% chance of prefix & suffix
+        if self.prefix_chance <= 0 or randrange(self.prefix_chance):  # (default) 50% chance of prefix & suffix
             end_caps = choice(self.PREFIX_SUFFIX)
             if type(end_caps[0]) is tuple:
                 end_caps = choice(end_caps)
@@ -72,16 +77,15 @@ class EmoGen:
             result += end_caps[0]
 
         user: list[str] = choice(self.data)
-
         for i in range(len(user)):
-            if l33t_chance <= 0 or randrange(l33t_chance):  # (default) 50% chance of l33t
+            if self.l33t_chance <= 0 or randrange(self.l33t_chance):  # (default) 50% chance of l33t
                 for j in list(range(len(user[i])))[1:]:
-                    if (user[i][j].upper() in self.LETTER_NUMBER.keys()
-                            and (l33t_chance <= 0 or randrange(l33t_chance*12))):
-                        user[i] = user[i][:j] + self.LETTER_NUMBER[user[i][j].upper()] + user[i][j+1:]
+                    if (user[i][j].upper() in self.L33T.keys()
+                            and (self.l33t_chance <= 0 or randrange(self.l33t_chance*12))):
+                        user[i] = user[i][:j] + self.L33T[user[i][j].upper()] + user[i][j+1:]
                         break
 
-        if seperator_chance <= 0 or randrange(seperator_chance):  # (default) 50% chance of having seperator
+        if self.seperator_chance <= 0 or randrange(self.seperator_chance):  # (default) 50% chance of having seperator
             seperator = choice(self.SEPARATORS)
             match seperator:
                 case "CAP":
@@ -96,7 +100,47 @@ class EmoGen:
 
         return end_caps[0] + result + end_caps[1]
 
-
 if __name__ == '__main__':
-    emo_gen: EmoGen = EmoGen(Path('sources'))
+    EPILOG_PHRASES: Final[tuple[str]] = (
+        'rawr x3',
+        'lolz@!!!',
+        'rawr means i love you in dinosaur >:3',
+        'haha! i\'m using my computer! :D'
+    )
+    # print epilog with italics instead of in quotes if terminal is ANSI-compatible
+    term = os.environ.get("TERM", "").lower()
+    parser_epilog = choice(EPILOG_PHRASES)
+    if sys.stdout.isatty() and (term or term != "dumb"):
+        parser_epilog = f'\033[3m{parser_epilog}\033[0m'
+    else:
+        parser_epilog = f'"{parser_epilog}"'
+
+    parser = argparse.ArgumentParser(
+        prog=NAME,
+        description='Generates a random emo username.',
+        epilog=parser_epilog
+    )
+    parser.add_argument(
+        '-d', '--source',
+        help="the source directory or file to pull names from (default: .../emogen/sources/)",
+        default=Path(f'{os.path.dirname(os.path.realpath(__file__))}/sources'),
+        type=Path
+    )
+    parser.add_argument(
+        '--version',
+        action='store_true',
+        help="prints software version and exits"
+    )
+    parser.add_argument(
+        '--debug',
+        action='store_true',
+        help="prints a walkthrough of how each string is transformed, for debugging purposes"
+    )
+    args = parser.parse_args()
+
+    if args.version:
+        print(f'{NAME} {".".join(str(i) for i in VERSION)}')
+        sys.exit()
+
+    emo_gen: EmoGen = EmoGen(args.source)
     print(emo_gen.generate())
