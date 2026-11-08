@@ -1,4 +1,4 @@
-# emo-gen default data source
+# EmoGen default data source
 #
 # names are stored in least-obfuscated form
 # (lowercase, no numbers, no shortened words, no external separators)
