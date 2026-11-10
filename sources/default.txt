@@ -5,7 +5,9 @@
 # pipes ("|") indicate word seperator point
 # other plaintext files in this folder will be read
 #
-# updated 04-04-2024
+# updated 11-09-2026
+
+misguided|ghost
 
 # [1]
 it|wasnt|a|phase|mom
@@ -17,7 +19,7 @@ loner|stoner
 goth|baby
 silence|is|the|loudest|rawrrrr
 damaged|goth|baby
-Charred|Black|Heart
+charred|black|heart
 xanax|and|panic|attacks
 all|panic|no|disco
 gerard|is|the|way
