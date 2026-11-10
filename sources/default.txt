@@ -1,4 +1,4 @@
-# EmoGen default data source
+# emogen default data source
 #
 # names are stored in least-obfuscated form
 # (lowercase, no numbers, no shortened words, no external separators)
@@ -49,7 +49,7 @@ tears|for|years
 reformed|cool|girl
 ceo|of|rock|bottom
 dude|wheres|my|dad
-Your|Fave|Bloody|Valentine
+your|fave|bloody|valentine
 skater|boy|forever
 dark|academia
 dude|wheres|my|ssri
