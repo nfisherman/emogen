@@ -10,7 +10,6 @@ CLI interface for emogen.py.
 __program__ = 'emogen'
 __author__ = 'nfisherman'
 __copyright__ = 'Copyright (c) 2026 nfisherman'
-__credits__ = 'See "References" in /README.md'
 __license__ = '0BSD'
 __version__ = '1.0.0'
 __status__ = "Production"
