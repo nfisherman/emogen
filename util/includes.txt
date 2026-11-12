@@ -1,0 +1,5 @@
+src/**/*.py
+sources
+install.py
+LICENSE
+README.md
